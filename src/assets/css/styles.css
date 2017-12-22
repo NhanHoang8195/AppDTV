@@ -1,0 +1,15 @@
+.form-information .form-group{
+	padding-top: 30px;
+	padding-left: 20px;
+}
+
+.form-information label {
+	margin-top: 7px;
+}
+.form-information input {
+	width: 800px;
+}
+
+.form-information select {
+    width: 800px;
+}
