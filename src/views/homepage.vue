@@ -13,7 +13,7 @@
     <div class="form-group">
       <div class="col-sm-offset-3">
         <label for="address2">Số điện thoại (*)<template v-if="hidden"><p style="color:red">Vui lòng điền thông tin này</p></template></label>
-        <input type="text" class="form-control" id="address2" placeholder="Số điện thoại" onfocus="this.placeholder=''" onblur="this.placeholder='Số điện thoại'" required v-model="userInfo.phone" />
+        <input  class="form-control" id="address2" placeholder="Số điện thoại" onfocus="this.placeholder=''" onblur="this.placeholder='Số điện thoại'" required v-model="userInfo.phone" type="text" v-on:keypress="validate"/>
       </div>
     </div>
     <div class=" form-group">
@@ -40,6 +40,7 @@
   <div class="col-sm-offset-3" id="canvas">
     <center>
       <h3>Lịch sử khách hàng</h3>
+      {{value}}
     </center>
     <table class="table table-hover">
       <thead>
@@ -60,9 +61,7 @@
   </div>
 </div>
 </template>
-<script>
-$
-</script>
+
 <script>
 export default {
   data() {
@@ -75,6 +74,7 @@ export default {
       },
       hidden: false,
       responseInfo: [],
+      value: ""
     }
   },
   methods: {
@@ -82,10 +82,17 @@ export default {
       if (this.userInfo.address !== '' && this.userInfo.phone !== '') {
         this.hidden = false
         this.post();
-
+        this.userInfo.address="",
+        this.userInfo.phone="",
+        this.userInfo.note=""
       } else {
         this.hidden = true
 
+      }
+    },
+    watch: {
+      this.userInfo: function(arg) {
+        console.log(arg);
       }
     },
     post: function() {
@@ -103,6 +110,15 @@ export default {
         //error
         console.log(response);
       })
+    },
+    validate(event) {
+      if(event.keyCode < 48 || event.keyCode >57 ) {
+          //return false, console.log(event);
+          this.value=event.keyCode;
+          console.log(event);
+      } else {
+        console.log("hihi");
+      }
     }
   }
 
