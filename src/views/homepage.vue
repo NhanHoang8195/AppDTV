@@ -1,5 +1,5 @@
 <template>
-<div id="app">
+<div id="hp">
   <form class="form-information">
     <center>
       <h1>Thông tin khách hàng</h1>
@@ -7,13 +7,13 @@
     <div class="form-group">
       <div class="col-sm-offset-3">
         <label for="address1">Địa chỉ (*) <template v-if="hidden"><p style="color:red">Vui lòng điền thông tin này</p></template></label>
-        <input type="text" class="form-control" id="address1" placeholder="Địa chỉ" onfocus="this.placeholder=''" onblur="this.placeholder='Địa chỉ'" required v-model="userInfo.address" />
+        <input type="text" class="form-control" id="address1" placeholder="Địa chỉ" onfocus="this.placeholder=''" onblur="this.placeholder='Địa chỉ'" v-model="userInfo.address" />
       </div>
     </div>
-    <div class="form-group">
-      <div class="col-sm-offset-3">
-        <label for="address2">Số điện thoại (*)<template v-if="hidden"><p style="color:red">Vui lòng điền thông tin này</p></template></label>
-        <input  class="form-control" id="address2" placeholder="Số điện thoại" onfocus="this.placeholder=''" onblur="this.placeholder='Số điện thoại'" required v-model="userInfo.phone" type="text" v-on:keypress="validate"/>
+    <div class="form-group ">
+      <div class="col-sm-offset-3 ">
+        <label for="address2 ">Số điện thoại (*)<template v-if="hidden "><p style="color:red ">Vui lòng điền thông tin này</p></template></label>
+        <input type="text " class="form-control " id="address2 " placeholder="Số điện thoại " onfocus="this.placeholder=''" onblur="this.placeholder='Số điện thoại'" v-model="userInfo.phone" />
       </div>
     </div>
     <div class=" form-group">
@@ -51,7 +51,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr id="tableLoop" v-for="(infor, index) in responseInfo">
+        <tr v-for="(infor, index) in userInfoDb">
           <td>{{index}}</td>
           <td>{{infor.typeCar}}</td>
           <td>{{infor.address}}</td>
@@ -61,9 +61,23 @@
   </div>
 </div>
 </template>
-
-<script>
+ <script>
+import Firebase from 'firebase'
+ let config = {
+   apiKey: "AIzaSyBdayjA3EmnHntCcCA0caJvfUQPESPassM",
+   authDomain: "app-ddv.firebaseapp.com",
+   databaseURL: "https://app-ddv.firebaseio.com",
+   projectId: "app-ddv",
+   storageBucket: "app-ddv.appspot.com",
+   messagingSenderId: "966606157223"
+ }
+ let app = Firebase.initializeApp(config);
+ let db = app.database();
+ let userInfoRef = db.ref('user-info');
 export default {
+  firebase: {
+       userInfoDb:userInfoRef
+  },
   data() {
     return {
       userInfo: {
@@ -86,6 +100,7 @@ export default {
         this.userInfo.phone="",
         this.userInfo.note=""
       } else {
+        console.log(this.userInfo);
         this.hidden = true
 
       }
@@ -96,32 +111,24 @@ export default {
       }
     },
     post: function() {
-      this.$http.post('http://localhost:8080/appdtvapi', {
-        address: this.userInfo.address,
-        phone: this.userInfo.phone,
-        typeCar: this.userInfo.typeCar,
-        note: this.userInfo.note
-      }).then(response => {
-        //success
-        this.responseInfo = response.body;
-
-        console.log(response);
-      }, response => {
-        //error
-        console.log(response);
-      })
-    },
-    validate(event) {
-      if(event.keyCode < 48 || event.keyCode >57 ) {
-          //return false, console.log(event);
-          this.value=event.keyCode;
-          console.log(event);
-      } else {
-        console.log("hihi");
-      }
+      // this.$http.post('https://app-ddv.firebaseio.com/user-info.json',
+      //   address: this.userInfo.address,
+      //   phone: this.userInfo.phone,
+      //   typeCar: this.userInfo.typeCar,
+      //   note: this.userInfo.note
+      //   this.userInfo
+      // ).then(response => {
+      //   //success
+      //   this.responseInfo = response.body;
+      //   console.log(response);
+      // }, response => {
+      //   //error
+      //   console.log(response);
+      // })
+      userInfoRef.push(this.userInfo);
     }
   }
 
 
 }
-</script>
+ </script>
