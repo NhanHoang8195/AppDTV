@@ -48,13 +48,16 @@
           <th>#</th>
           <th>Loại xe</th>
           <th>Địa điểm</th>
+          <th>Status</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody v-if="">
         <tr v-for="(infor, index) in userInfoDb">
+          <template v-if="infor.phone===userInfo.phone">
           <td>{{index}}</td>
           <td>{{infor.typeCar}}</td>
           <td>{{infor.address}}</td>
+        </template>
         </tr>
       </tbody>
     </table>
@@ -75,57 +78,55 @@ import Firebase from 'firebase'
  let db = app.database();
  let userInfoRef = db.ref('user-info');
 export default {
-  firebase: {
-       userInfoDb:userInfoRef
-  },
+    firebase:{
+      userInfoDb:userInfoRef
+    },
   data() {
     return {
       userInfo: {
         address: "",
         phone: "",
         typeCar: "REGULAR",
-        note: ""
+        note: "",
+        location:{
+
+        }
       },
       hidden: false,
-      responseInfo: [],
       value: ""
     }
   },
   methods: {
     checkEmpty: function() {
       if (this.userInfo.address !== '' && this.userInfo.phone !== '') {
-        this.hidden = false
+        this.hidden = false,
         this.post();
-        this.userInfo.address="",
-        this.userInfo.phone="",
-        this.userInfo.note=""
       } else {
-        console.log(this.userInfo);
         this.hidden = true
 
       }
     },
-    watch: {
-      this.userInfo: function(arg) {
-        console.log(arg);
-      }
-    },
     post: function() {
-      // this.$http.post('https://app-ddv.firebaseio.com/user-info.json',
-      //   address: this.userInfo.address,
-      //   phone: this.userInfo.phone,
-      //   typeCar: this.userInfo.typeCar,
-      //   note: this.userInfo.note
-      //   this.userInfo
-      // ).then(response => {
-      //   //success
-      //   this.responseInfo = response.body;
-      //   console.log(response);
-      // }, response => {
-      //   //error
-      //   console.log(response);
-      // })
-      userInfoRef.push(this.userInfo);
+      this.$http.get('https://maps.googleapis.com/maps/api/geocode/json', {
+        params: {
+          address: this.userInfo.address
+        }
+      }).then(
+        responseGoogle => {
+
+          return this.userInfo.location = responseGoogle.body.results[0].geometry.location;
+        }, responseGoogle => {
+          (console.log(responseGoogle))
+        }
+      ).then(function(data){
+          userInfoRef.push(this.userInfo);
+          this.userInfo.address="",
+          this.userInfo.phone="",
+          this.userInfo.note="",
+          this.userInfo.location={}
+      })
+
+
     }
   }
 
