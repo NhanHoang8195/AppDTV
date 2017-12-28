@@ -51,7 +51,7 @@
           <th>Status</th>
         </tr>
       </thead>
-      <tbody v-if="">
+      <tbody >
         <tr v-for="(infor, index) in userInfoDb">
           <template v-if="infor.phone===userInfo.phone">
           <td>{{index}}</td>
