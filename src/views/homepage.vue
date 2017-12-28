@@ -39,10 +39,9 @@
   </form>
   <div class="col-sm-offset-3" id="canvas">
     <center>
-      <h3>Lịch sử khách hàng</h3>
-      {{value}}
+      <h3>Lịch sử khách hàng</h3> {{value}}
     </center>
-    <table class="table table-hover">
+    <table class="table table-hover table-bordered">
       <thead>
         <tr>
           <th>#</th>
@@ -51,7 +50,7 @@
           <th>Status</th>
         </tr>
       </thead>
-      <tbody >
+      <tbody>
         <tr v-for="(infor, index) in userInfoDb">
           <template v-if="infor.phone===userInfo.phone">
           <td>{{index}}</td>
@@ -88,9 +87,8 @@ export default {
         phone: "",
         typeCar: "REGULAR",
         note: "",
-        location:{
-
-        }
+        location:{},
+        status:"DANG-DINH-VI"
       },
       hidden: false,
       value: ""
@@ -116,17 +114,19 @@ export default {
 
           return this.userInfo.location = responseGoogle.body.results[0].geometry.location;
         }, responseGoogle => {
-          (console.log(responseGoogle))
+        //  (console.log(responseGoogle))
         }
-      ).then(function(data){
+      ).then(() =>{
           userInfoRef.push(this.userInfo);
           this.userInfo.address="",
           this.userInfo.phone="",
-          this.userInfo.note="",
-          this.userInfo.location={}
-      })
-
-
+          this.userInfo.note=""
+      }, e =>{
+        userInfoRef.push(this.userInfo);
+        this.userInfo.address="",
+        this.userInfo.phone="",
+        this.userInfo.note=""
+      });
     }
   }
 
