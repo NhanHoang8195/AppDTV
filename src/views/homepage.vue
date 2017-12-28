@@ -56,6 +56,7 @@
           <td>{{index}}</td>
           <td>{{infor.typeCar}}</td>
           <td>{{infor.address}}</td>
+          <td>{{infor.status}}</td>
         </template>
         </tr>
       </tbody>
@@ -87,8 +88,10 @@ export default {
         phone: "",
         typeCar: "REGULAR",
         note: "",
-        location:{},
-        status:"DANG-DINH-VI"
+        location:{lat:-1,
+          lng:-1
+        },
+        status:""
       },
       hidden: false,
       value: ""
@@ -117,14 +120,15 @@ export default {
         //  (console.log(responseGoogle))
         }
       ).then(() =>{
+        this.userInfo.status="DA-DINH-VI"
           userInfoRef.push(this.userInfo);
           this.userInfo.address="",
-          this.userInfo.phone="",
           this.userInfo.note=""
       }, e =>{
+        this.userInfo.location={lat:-1, lng:-1},
+        this.userInfo.status="CAN-DINH-VI",
         userInfoRef.push(this.userInfo);
         this.userInfo.address="",
-        this.userInfo.phone="",
         this.userInfo.note=""
       });
     }
