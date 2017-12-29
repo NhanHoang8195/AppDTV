@@ -44,19 +44,21 @@
     <table class="table table-hover table-bordered">
       <thead>
         <tr>
-          <th>#</th>
+          <th>Thời gian</th>
           <th>Loại xe</th>
           <th>Địa điểm</th>
           <th>Status</th>
+          <th>Ghi chú</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(infor, index) in userInfoDb">
           <template v-if="infor.phone===userInfo.phone">
-          <td>{{index}}</td>
+          <td>{{infor.date}}</td>
           <td>{{infor.typeCar}}</td>
           <td>{{infor.address}}</td>
           <td>{{infor.status}}</td>
+          <td>{{infor.note}}</td>
         </template>
         </tr>
       </tbody>
@@ -91,7 +93,8 @@ export default {
         location:{lat:-1,
           lng:-1
         },
-        status:""
+        status:"",
+        date: Date.now()
       },
       hidden: false,
       value: ""
@@ -120,12 +123,14 @@ export default {
         //  (console.log(responseGoogle))
         }
       ).then(() =>{
-        this.userInfo.status="DA-DINH-VI"
+        this.userInfo.date = new Date(this.userInfo.date).toLocaleString();
+        this.userInfo.status="DA-DINH-VI",
           userInfoRef.push(this.userInfo);
           this.userInfo.address="",
           this.userInfo.note=""
       }, e =>{
         this.userInfo.location={lat:-1, lng:-1},
+        this.userInfo.date = new Date(this.userInfo.date).toLocaleString();
         this.userInfo.status="CAN-DINH-VI",
         userInfoRef.push(this.userInfo);
         this.userInfo.address="",
