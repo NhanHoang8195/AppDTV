@@ -90,8 +90,8 @@ export default {
         phone: "",
         typeCar: "REGULAR",
         note: "",
-        location:{lat:-1,
-          lng:-1
+        location:{lat:-200,
+          lng:-200
         },
         status:"",
         date: Date.now()
@@ -129,7 +129,7 @@ export default {
           this.userInfo.address="",
           this.userInfo.note=""
       }, e =>{
-        this.userInfo.location={lat:-1, lng:-1},
+        this.userInfo.location={lat:-200, lng:-200},
         this.userInfo.date = new Date(this.userInfo.date).toLocaleString();
         this.userInfo.status="CAN-DINH-VI",
         userInfoRef.push(this.userInfo);
